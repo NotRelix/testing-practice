@@ -14,21 +14,36 @@ export function reverseString(text) {
   return reversedWord;
 }
 
+function getAlphabetIndex(alphabet, letter) {
+  let alphabetIndex = null;
+  alphabet.forEach((alphabetLetter, index) => {
+    if (letter.toLowerCase() === alphabetLetter) {
+      alphabetIndex = index;
+    }
+  });
+  return alphabetIndex;
+}
+
+function getNewAlphabetIndex(alphabet, alphabetIndex, key) {
+  return (alphabetIndex + key) % alphabet.length;
+}
+
 export function caesarCipher(text, key) {
   const alphabet = "abcdefghijklmnopqrstuvwxyz".split("");
-  const modifiedText = text.toLowerCase().split("");
+  const modifiedText = text.split("");
   const encryptedMessage = modifiedText.map((letter) => {
-    let alphabetIndex = null;
-    alphabet.forEach((alphabetLetter, index) => {
-      if (letter === alphabetLetter) {
-        alphabetIndex = index;
-      }
-    });
-    if (alphabetIndex === null) {
+    const alphabetIndex = getAlphabetIndex(alphabet, letter);
+    if (letter === " ") {
       return [" "];
     }
-    const newAlphabetIndex = (alphabetIndex + key) % alphabet.length;
-    return alphabet[newAlphabetIndex];
+    if (alphabetIndex === null) {
+      return [letter];
+    }
+    const newAlphabetIndex = getNewAlphabetIndex(alphabet, alphabetIndex, key);
+    if (letter.toLowerCase() === letter) {
+      return alphabet[newAlphabetIndex];
+    }
+    return alphabet[newAlphabetIndex].toUpperCase();
   })
-  return encryptedMessage.join("").toUpperCase();
+  return encryptedMessage.join("");
 }
